@@ -12,8 +12,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     @BindField(viewIds = ["name", "amount"], viewName = "itemView")
-    fun bind(item: String) {
+    fun bind(item: Bill) {
 //        bindFields(item, itemViewHere)
     }
 
 }
+
+data class Bill(val name: String, val amount: String)
