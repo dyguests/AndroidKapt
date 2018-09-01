@@ -5,9 +5,7 @@ import com.google.auto.service.AutoService
 import java.io.IOException
 import javax.annotation.processing.*
 import javax.lang.model.SourceVersion
-import javax.lang.model.element.ElementKind
 import javax.lang.model.element.TypeElement
-import javax.tools.Diagnostic
 
 @AutoService(Processor::class) // For registering the service
 //@SupportedSourceVersion(SourceVersion.RELEASE_8) // to support Java 8
@@ -15,21 +13,25 @@ import javax.tools.Diagnostic
 @SupportedOptions(BindFieldsProcessor.KAPT_KOTLIN_GENERATED_OPTION_NAME)
 class BindFieldsProcessor : AbstractProcessor() {
     override fun process(set: MutableSet<out TypeElement>?, roundEnv: RoundEnvironment?): Boolean {
-        roundEnv?.getElementsAnnotatedWith(BindField::class.java)?.forEach { methodElement ->
-            if (methodElement.kind != ElementKind.METHOD) {
-                processingEnv.messager.printMessage(Diagnostic.Kind.ERROR, "Can only be applied to functions,  element: $methodElement ")
-                return false
-            }
-            val generatedSourcesRoot: String = processingEnv.options[KAPT_KOTLIN_GENERATED_OPTION_NAME].orEmpty()
-            if (generatedSourcesRoot.isEmpty()) {
-                processingEnv.messager.printMessage(Diagnostic.Kind.ERROR, "Can't find the target directory for generated Kotlin files.")
-                return false
-            }
-        }
+//        roundEnv?.getElementsAnnotatedWith(BindField::class.java)?.forEach { methodElement ->
+//            if (methodElement.kind != ElementKind.METHOD) {
+//                processingEnv.messager.printMessage(Diagnostic.Kind.ERROR, "Can only be applied to functions,  element: $methodElement ")
+//                return false
+//            }
+//            val generatedSourcesRoot: String = processingEnv.options[KAPT_KOTLIN_GENERATED_OPTION_NAME].orEmpty()
+//            if (generatedSourcesRoot.isEmpty()) {
+//                processingEnv.messager.printMessage(Diagnostic.Kind.ERROR, "Can't find the target directory for generated Kotlin files.")
+//                return false
+//            }
+//        }
 
         createGeneratedClass(roundEnv)
 
         return true
+    }
+
+    override fun getSupportedAnnotationTypes(): MutableSet<String> {
+        return mutableSetOf(BindField::class.java.canonicalName)
     }
 
     private fun createGeneratedClass(roundEnv: RoundEnvironment?) {
@@ -47,7 +49,7 @@ class BindFieldsProcessor : AbstractProcessor() {
 
 
             // this is appending to the return statement
-            builder.append(objectType).append(" says hello!\n")
+            builder.append(objectType).append(" says hello!\\n")
         }
 
 
