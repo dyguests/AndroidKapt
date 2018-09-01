@@ -27,6 +27,12 @@ class BindFieldsProcessor : AbstractProcessor() {
             }
         }
 
+        createGeneratedClass(roundEnv)
+
+        return true
+    }
+
+    private fun createGeneratedClass(roundEnv: RoundEnvironment?) {
         //last
         val builder = StringBuilder()
                 .append("package com.fanhl.androidkapt.processor.generated;\n\n")
@@ -62,10 +68,6 @@ class BindFieldsProcessor : AbstractProcessor() {
             // Note: calling e.printStackTrace() will print IO errors
             // that occur from the file already existing after its first run, this is normal
         }
-
-
-
-        return true
     }
 
     companion object {
